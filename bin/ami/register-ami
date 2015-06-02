@@ -1,0 +1,5 @@
+source ~/.bash_secret
+
+DATE=`date +"%Y%m%d"`
+
+/usr/bin/ec2-register clouderg-ami/$DATE/image.manifest.xml -n $DATE-mail.clouderg.com -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --region us-east-1
