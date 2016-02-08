@@ -17,12 +17,12 @@ service nginx stop &
 /etc/init.d/mysql stop &
 
 DATE=`date +"%Y%m%d"`
+AKI=`/opt/ec2-api-tools/bin/ec2-describe-images | grep $AWS_ACCOUNT_ID | awk '{ print $9 }'`
+DEST=/mnt/xvdf
 
-/bin/rm -rf /tmp/bundle
-mkdir -p /tmp/bundle
 
-/usr/bin/ec2-bundle-vol -k $EC2_PRIVATE_KEY -c $EC2_CERT -u $AWS_ACCOUNT_ID -r x86_64 --no-filter --no-inherit -d /tmp/bundle -e /tmp/bundle -e /swapfile -e /home/docker -e /home/alex -e /home/awsbackup -e /home/docker -e /home/etc
+/opt/ec2-api-tools/bin/ec2-bundle-vol -k $EC2_PRIVATE_KEY -c $EC2_CERT -u $AWS_ACCOUNT_ID -r x86_64 --no-filter --no-inherit -d $DEST -e $DEST -e /swapfile -e /home/docker -e /home/alex -e /home/awsbackup -e /home/docker -e /home/etc
 
-/usr/bin/ec2-upload-bundle -b clouderg-ami/$DATE -m /tmp/bundle/image.manifest.xml -a $AWS_ACCESS_KEY -s $AWS_SECRET_KEY -d /tmp/bundle --retry
+/opt/ec2-api-tools/bin/ec2-upload-bundle -b clouderg-ami/$DATE -m $DEST/image.manifest.xml -a $AWS_ACCESS_KEY -s $AWS_SECRET_KEY -d $DEST --retry
 
-/usr/bin/ec2-register clouderg-ami/$DATE/image.manifest.xml -n $DATE-mail.clouderg.com -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --region us-east-1 --virtualization-type hvm
+/opt/ec2-api-tools/bin/ec2-register clouderg-ami/$DATE/image.manifest.xml -n $DATE-mail.clouderg.com -O $AWS_ACCESS_KEY -W $AWS_SECRET_KEY --kernel $AKI --region us-east-1

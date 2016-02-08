@@ -3,7 +3,7 @@ source ~/.bash_secret
 DATE=`date +"%Y%m%d"`
 FILENAME="dotfiles.tgz"
 
-(cd ~;tar zcf ~/data/$FILENAME .aws .bash* .gnu* .s3* .vimrc .gnupg .chef .passwd-s3fs .ssh .env .modulus)
+(cd ~;tar zcf ~/data/$FILENAME  ~/bin .aws .bash* .gnu* .s3* .vimrc .gnupg .chef .passwd-s3fs .ssh .env .modulus)
 
 openssl enc -aes-256-cbc -e -in ~/data/$FILENAME -out ~/data/$FILENAME.openssl -pass pass:$MYSQL_PASSWD
 
